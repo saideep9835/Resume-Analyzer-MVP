@@ -53,7 +53,7 @@ CRITICAL JSON FORMATTING RULES:
 
 Return ONLY valid JSON, no markdown.`;
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ detail: 'Method not allowed' });
     return;
@@ -114,4 +114,4 @@ module.exports = async (req, res) => {
   } catch (error) {
     res.status(502).json({ detail: `OpenAI request failed: ${error.message}` });
   }
-};
+}
