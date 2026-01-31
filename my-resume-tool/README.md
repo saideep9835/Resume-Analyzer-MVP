@@ -67,4 +67,12 @@ OPENAI_API_KEY=your_real_key_here
 
 4. Deploy. The frontend will call `/api/analyze` which runs on Vercel serverless.
 
-Local dev (optional): Vercel serverless does not run locally unless you use `vercel dev`.
+Local dev with Vercel:
+
+```bash
+cd my-resume-tool
+npm install
+npm run vercel:dev
+```
+
+This runs the frontend and the `/api/analyze` serverless function locally.
