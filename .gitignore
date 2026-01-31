@@ -1,0 +1,14 @@
+# Node
+node_modules/
+my-resume-tool/node_modules/
+
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+
+# Env
+backend/.env
+
+# OS
+.DS_Store
