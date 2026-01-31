@@ -52,3 +52,19 @@ The frontend calls the backend at `http://localhost:8000/analyze`.
 ```bash
 curl http://localhost:8000/health
 ```
+
+## Vercel Serverless Deployment (Frontend + API)
+
+You can deploy everything on Vercel by using the serverless function in `my-resume-tool/api/analyze.js`.
+
+1. Push this repo to GitHub.
+2. In Vercel, import the repo and set the **Root Directory** to `my-resume-tool`.
+3. Add an environment variable in Vercel:
+
+```
+OPENAI_API_KEY=your_real_key_here
+```
+
+4. Deploy. The frontend will call `/api/analyze` which runs on Vercel serverless.
+
+Local dev (optional): Vercel serverless does not run locally unless you use `vercel dev`.
