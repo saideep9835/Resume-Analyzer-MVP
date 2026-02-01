@@ -35,9 +35,9 @@ ANALYSIS INSTRUCTIONS:
    - Indicate impact, for example Adding this preferred skill could boost your match by X percent
 
 8. Generate interview preparation:
-   - Create exactly 5 interview questions
+   - Create exactly 10 interview questions
    - Include mix of technical, behavioral, scenario based
-   - Provide a short answer for each question in 1 to 2 sentences
+   - Provide a 5 lines sentences as answers
    - Use simple language, no complex punctuation
    - Prioritize questions on gaps between resume and JD
 
@@ -45,13 +45,64 @@ CRITICAL JSON FORMATTING RULES:
 - Return ONLY the JSON object, nothing before or after
 - Do NOT use apostrophes or quotes inside string values
 - Replace contractions with full forms
-- Keep interview answers under 60 words each
+- Keep interview answers under 150 words each
 - Use only basic punctuation: periods, commas, hyphens
 - No special characters: avoid parentheses, colons inside strings, semicolons
 - All text must be on single lines (no line breaks)
 - Double check your JSON is valid before returning
 
-Return ONLY valid JSON, no markdown.`;
+Return ONLY valid JSON, no markdown:
+{
+  "overallMatch": 75,
+  "missingSkills": ["Python", "Docker", "CI/CD"],
+  "requiredSkills": {
+    "missing": ["Python", "Docker"],
+    "present": ["JavaScript", "Git"]
+  },
+  "preferredSkills": [
+    {
+      "skill": "TypeScript",
+      "inResume": false,
+      "benefit": "Adding TypeScript could boost your match by 8% and shows commitment to type-safe development",
+      "priority": "medium"
+    }
+  ],
+  "atsKeywords": {
+    "mustHave": ["Python", "microservices", "scalability", "RESTful APIs"],
+    "replaceWith": [
+      {"current": "worked with databases", "better": "PostgreSQL database optimization"},
+      {"current": "team player", "better": "cross-functional collaboration"}
+    ],
+    "exactPhrases": ["5+ years experience", "Bachelors degree in Computer Science"],
+    "actionVerbs": ["architected", "optimized", "scaled", "implemented"]
+  },
+  "pointsToAdd": [
+    {
+      "suggestion": "Led migration of legacy system to microservices architecture, reducing deployment time by 60% and improving system reliability",
+      "reason": "JD emphasizes microservices experience and system optimization - this demonstrates both with quantified impact",
+      "priority": "high"
+    }
+  ],
+  "pointsToRemove": [
+    {
+      "content": "Managed social media accounts for university club",
+      "reason": "JD is for a backend engineering role - social media experience is irrelevant and takes valuable space"
+    }
+  ],
+  "keyInsights": [
+    "Your resume focuses heavily on frontend work, but this role is 80 percent backend - reframe your full stack projects to emphasize server-side contributions",
+    "JD mentions scalability multiple times but your resume never quantifies scale - add metrics",
+    "You have the technical skills but lack leadership language - JD wants mentoring and technical leadership"
+  ],
+  "interviewQuestions": [
+    {
+      "question": "Can you walk me through your experience with microservices?",
+      "type": "technical",
+      "reason": "JD emphasizes microservices but resume does not mention it",
+      "sampleAnswer": "I have worked with microservices from a backend engineering perspective in my previous software roles. I have developed RESTful microservices using Java and Spring Boot, where each service handled a specific business function and communicated over HTTP using JSON. I have worked with API contracts and authentication mechanisms like JWT or OAuth, and followed principles such as loose coupling and independent deployment. I also have experience deploying these services in cloud environments like AWS and Azure using Docker and Kubernetes. From an operational standpoint, I have handled logging, monitoring, and basic production troubleshooting for distributed services. Although my current role is field focused, this microservices background helps me understand complex systems and structured integration workflows quickly."
+    }
+  ]
+}`;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
