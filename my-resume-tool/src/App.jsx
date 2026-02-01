@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Loader2, CheckCircle2, XCircle, AlertCircle, Sparkles, Target, TrendingUp, FileText, HelpCircle, Lightbulb } from 'lucide-react';
 
 export default function ResumeAnalyzer() {
+  const MAX_CHARACTERS = 8000;
   const [resume, setResume] = useState('');
   const [jobDescription, setJobDescription] = useState('');
   const [analysis, setAnalysis] = useState(null);
@@ -12,6 +13,11 @@ export default function ResumeAnalyzer() {
   const analyzeResume = async () => {
     if (!resume.trim() || !jobDescription.trim()) {
       setError('Please fill in both resume and job description');
+      return;
+    }
+
+    if (resume.length > MAX_CHARACTERS || jobDescription.length > MAX_CHARACTERS) {
+      setError(`Please limit each field to ${MAX_CHARACTERS} characters or less`);
       return;
     }
 
@@ -83,13 +89,14 @@ export default function ResumeAnalyzer() {
                 </div>
                 <textarea
                   value={resume}
-                  onChange={(e) => setResume(e.target.value)}
+                  onChange={(e) => setResume(e.target.value.slice(0, MAX_CHARACTERS))}
+                  maxLength={MAX_CHARACTERS}
                   placeholder="Paste your resume content here..."
                   className="w-full h-72 p-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/50 focus:border-blue-500 resize-none transition-all duration-200 text-gray-700"
                 />
                 <div className="mt-3 text-sm text-gray-500 flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  {resume.length} characters
+                  {resume.length}/{MAX_CHARACTERS} characters
                 </div>
               </div>
             </div>
@@ -106,13 +113,14 @@ export default function ResumeAnalyzer() {
                 </div>
                 <textarea
                   value={jobDescription}
-                  onChange={(e) => setJobDescription(e.target.value)}
+                  onChange={(e) => setJobDescription(e.target.value.slice(0, MAX_CHARACTERS))}
+                  maxLength={MAX_CHARACTERS}
                   placeholder="Paste the job description here..."
                   className="w-full h-72 p-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-500/50 focus:border-purple-500 resize-none transition-all duration-200 text-gray-700"
                 />
                 <div className="mt-3 text-sm text-gray-500 flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  {jobDescription.length} characters
+                  {jobDescription.length}/{MAX_CHARACTERS} characters
                 </div>
               </div>
             </div>

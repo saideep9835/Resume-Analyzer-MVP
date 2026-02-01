@@ -105,6 +105,7 @@ Return ONLY valid JSON, no markdown:
 }`;
 
 export default async function handler(req, res) {
+  const MAX_CHARACTERS = 8000;
   if (req.method !== 'POST') {
     res.status(405).json({ detail: 'Method not allowed' });
     return;
@@ -113,6 +114,11 @@ export default async function handler(req, res) {
   const { resume, jobDescription } = req.body || {};
   if (!resume?.trim() || !jobDescription?.trim()) {
     res.status(400).json({ detail: 'Resume and job description are required' });
+    return;
+  }
+
+  if (resume.length > MAX_CHARACTERS || jobDescription.length > MAX_CHARACTERS) {
+    res.status(400).json({ detail: `Each field must be ${MAX_CHARACTERS} characters or less` });
     return;
   }
 
