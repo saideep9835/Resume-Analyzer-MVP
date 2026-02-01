@@ -10,6 +10,7 @@ export default function ResumeAnalyzer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeSection, setActiveSection] = useState('overview');
+  const [modelMode, setModelMode] = useState('accurate');
 
   const analyzeResume = async () => {
     if (!resume.trim() || !jobDescription.trim()) {
@@ -35,7 +36,8 @@ export default function ResumeAnalyzer() {
         },
         body: JSON.stringify({
           resume,
-          jobDescription
+          jobDescription,
+          mode: modelMode
         })
       });
 
@@ -130,7 +132,37 @@ export default function ResumeAnalyzer() {
         )}
 
         {!analysis && (
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 space-y-4">
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <span className="text-white/90 text-sm font-semibold">Model Mode:</span>
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-1 flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => setModelMode('fast')}
+                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                    modelMode === 'fast'
+                      ? 'bg-white text-purple-700 shadow'
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Fast
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModelMode('accurate')}
+                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                    modelMode === 'accurate'
+                      ? 'bg-white text-purple-700 shadow'
+                      : 'text-white/80 hover:text-white'
+                  }`}
+                >
+                  Accurate
+                </button>
+              </div>
+              <span className="text-white/70 text-xs">
+                Fast uses lower cost model, Accurate uses higher quality model
+              </span>
+            </div>
             <button
               onClick={analyzeResume}
               disabled={loading}

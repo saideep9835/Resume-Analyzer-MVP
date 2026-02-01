@@ -108,7 +108,7 @@ const CACHE_TTL_MS = 1000 * 60 * 60;
 const CACHE_MAX_ENTRIES = 200;
 const cache = new Map();
 
-const makeCacheKey = (resume, jobDescription) => `${resume}\n---\n${jobDescription}`;
+const makeCacheKey = (resume, jobDescription, mode) => `${mode || 'accurate'}\n---\n${resume}\n---\n${jobDescription}`;
 
 const getCachedValue = (key) => {
   const entry = cache.get(key);
@@ -135,13 +135,13 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { resume, jobDescription } = req.body || {};
+  const { resume, jobDescription, mode } = req.body || {};
   if (!resume?.trim() || !jobDescription?.trim()) {
     res.status(400).json({ detail: 'Resume and job description are required' });
     return;
   }
 
-  const cacheKey = makeCacheKey(resume, jobDescription);
+  const cacheKey = makeCacheKey(resume, jobDescription, mode);
   const cached = getCachedValue(cacheKey);
   if (cached) {
     res.status(200).json({ content: cached, cached: true });
@@ -160,6 +160,7 @@ export default async function handler(req, res) {
   }
 
   const prompt = `RESUME:\n${resume}\n\nJOB DESCRIPTION:\n${jobDescription}`;
+  const selectedModel = mode === 'fast' ? 'gpt-4o-mini' : 'gpt-4o';
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -169,7 +170,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: selectedModel,
         temperature: 0.2,
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
