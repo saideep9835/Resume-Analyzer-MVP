@@ -104,6 +104,30 @@ Return ONLY valid JSON, no markdown:
   ]
 }`;
 
+const CACHE_TTL_MS = 1000 * 60 * 60;
+const CACHE_MAX_ENTRIES = 200;
+const cache = new Map();
+
+const makeCacheKey = (resume, jobDescription) => `${resume}\n---\n${jobDescription}`;
+
+const getCachedValue = (key) => {
+  const entry = cache.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+    cache.delete(key);
+    return null;
+  }
+  return entry.value;
+};
+
+const setCachedValue = (key, value) => {
+  cache.set(key, { value, timestamp: Date.now() });
+  if (cache.size > CACHE_MAX_ENTRIES) {
+    const oldestKey = cache.keys().next().value;
+    if (oldestKey) cache.delete(oldestKey);
+  }
+};
+
 export default async function handler(req, res) {
   const MAX_CHARACTERS = 8000;
   if (req.method !== 'POST') {
@@ -114,6 +138,13 @@ export default async function handler(req, res) {
   const { resume, jobDescription } = req.body || {};
   if (!resume?.trim() || !jobDescription?.trim()) {
     res.status(400).json({ detail: 'Resume and job description are required' });
+    return;
+  }
+
+  const cacheKey = makeCacheKey(resume, jobDescription);
+  const cached = getCachedValue(cacheKey);
+  if (cached) {
+    res.status(200).json({ content: cached, cached: true });
     return;
   }
 
@@ -167,7 +198,8 @@ export default async function handler(req, res) {
       return;
     }
 
-    res.status(200).json({ content: parsed });
+    setCachedValue(cacheKey, parsed);
+    res.status(200).json({ content: parsed, cached: false });
   } catch (error) {
     res.status(502).json({ detail: `OpenAI request failed: ${error.message}` });
   }
