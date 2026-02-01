@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Loader2, CheckCircle2, XCircle, AlertCircle, Sparkles, Target, TrendingUp, FileText, HelpCircle, Lightbulb } from 'lucide-react';
 
 export default function ResumeAnalyzer() {
@@ -56,6 +57,7 @@ export default function ResumeAnalyzer() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 relative overflow-hidden">
+      <Analytics />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-white opacity-10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
