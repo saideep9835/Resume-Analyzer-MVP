@@ -327,6 +327,8 @@ ANALYSIS_JSON_SCHEMA = {
         },
         "interviewQuestions": {
             "type": "array",
+            "minItems": 10,
+            "maxItems": 10,
             "items": {
                 "type": "object",
                 "properties": {

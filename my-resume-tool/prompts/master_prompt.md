@@ -141,6 +141,7 @@ If any recommendation would require candidate to fabricate experience, tools, ce
 Return only valid JSON
 Do not include markdown
 Do not include explanation outside JSON
+Generate exactly 10 interviewQuestions items
 All fields must be present
 Use arrays even if empty
 Use plain concise language
